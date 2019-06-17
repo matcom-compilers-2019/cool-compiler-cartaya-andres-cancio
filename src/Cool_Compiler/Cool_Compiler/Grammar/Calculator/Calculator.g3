@@ -1,0 +1,120 @@
+grammar Calculator;
+ 
+@parser::members
+{    
+	protected const int EOF = Eof;    
+}
+ 
+@lexer::members
+{    
+	protected const int EOF = Eof;    
+	protected const int HIDDEN = Hidden;
+}
+ 
+/* 
+* Parser Rules 
+*/
+
+program : expr+                                                 # prog
+		| class+                                                # corpus  
+		;
+
+class : CLASS TYPE (INHERITS TYPE)? '{' featurelist '}'         # class_def
+	  ;
+
+featurelist : feature+ ;
+
+feature : ID '(' formal (',' formal)* ')' ':' TYPE '{' stamentlist '}'       # method_definitions
+		| formal (EQUAL_AS expr)?                                            # attr_definitions 
+		;
+
+stamentlist : stament+ ;
+
+stament : expr ;
+
+formal : ID ':' TYPE ;
+          
+expr : ID '<-' expr                                             # asignacion 
+	 | expr '.' ID '(' params  ')'                              # exp_dot_method
+	 | ID '(' params ')'                                        # invoque_method
+	 | expr op = '**' expr                                      # pow
+	 | expr op = ('*' | '/' | '%' | '<<' | '>>' ) expr          # multdiv
+     | expr op = ('+' | '-' | '&' | '|' | '^')    expr          # sumsub
+	 | expr op = ('=' | '<' | '<=' | '>' | '>=' ) expr          # compar
+	 | op = ( '!' | 'not') expr                                 # unary                                 
+	 | '(' expr ')'                                             # bracket
+	 | INT                                                      # int
+	 | (TRUE | FALSE)                                           # bool
+	 | STRCTE                                                   # strcte
+	 | ID                                                       # id
+	 ; 
+
+params : (expr (',' expr)* )? ;
+
+/* 
+* Lexer Rules 
+*/
+
+/* ID */
+
+WORD : ([a-z]+[0-9]+)+ ;
+ID   : WORD             ;
+TYPE : WORD             ;
+
+
+/* cte */
+
+INT : [0-9]+ ;
+STRCTE : '"' ~('"') '"' ;
+
+/* operator */
+
+ADD : '+'    ;
+SUB : '-'    ;
+POW : '**'   ;
+MUL : '*'    ;
+DIV : '/'    ;
+MOD : '%'    ;
+AND : '&'    ;
+OR : '|'     ;
+XOR : '^'    ;
+SLEFT : '<<' ;
+SRIGHT : '>>';
+LESS  : '<' ;
+GREAT : '>' ;
+EQUAL_CM : '=' ;
+LESSEQ : '<=' ;
+GREATEQ : '>=' ;
+EQUAL_AS : '<-';
+
+
+/* keywords */
+
+CLASS : 'class'       ;
+ELSE  : 'else'        ;
+FALSE : 'false'       ;
+FI    : 'fi'          ;
+IF    : 'if'          ;
+IN    : 'in'          ;
+INHERITS : 'inherits' ;
+ISVOID   : 'isvoid'   ;
+LET      :  'let'     ;
+LOOP     : 'loop'     ;
+POOL     :  'pool'    ;
+THEN     : 'then'     ;
+WHILE    : 'while '   ;
+CASE     : 'case'     ;
+ESAC     : 'esac'     ;
+NEW      : 'new'      ;
+OF       : 'of'       ;   
+NOT      : 'not'      ; 
+TRUE     : 'true'     ;
+
+
+WS    
+	: (' ' | '\r' | ';' | '\n') -> channel(HIDDEN)
+	; 
+
+LINE_COMMENT
+	: '//' ~[\r\n]* -> channel(HIDDEN)
+	;

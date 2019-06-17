@@ -1,0 +1,4 @@
+S --> d m n S | T | T + S | S E | true | d
+E --> p S
+T --> I | ( S ) | I * T | - T
+I --> i
