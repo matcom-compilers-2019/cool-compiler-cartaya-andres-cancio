@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Grammar\Calculator\Calculator.g3" />
     <None Include="Grammar\Cool\Cool.g4" />
     <None Include="Grammar\Cool\Cool.interp" />

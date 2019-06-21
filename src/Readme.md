@@ -34,13 +34,13 @@ Ud. podrá encontrar la especificación formal del lenguaje COOL en el documento
 
 ## Sobre el funcionamiento del compilador
 
-El compilador de COOL se ejecutará como se ha definido anteriormente.
-En caso de que no ocurran errores durante la operación del compilador, **coolc.sh** deberá terminar con código de salida 0, generar (o sobrescribir si ya existe) en la misma carpeta del archivo **.cl** procesado, y con el mismo nombre que éste, un archivo con extension **.mips** que pueda ser ejecutado con **spim**. Además, reportar a la salida estándar solamente lo siguiente:
+El compilador de COOL se ejecutará como se ha definido anteriormente (Funciona solamente en windows).
+En caso de que no ocurran errores durante la operación del compilador, **coolc.bat** deberá terminar con código de salida 0, generar (o sobrescribir si ya existe) en la misma carpeta del archivo **.cl** procesado, y con el mismo nombre que éste, un archivo con extension **.s** que pueda ser ejecutado con **spim**. Además, reportar a la salida estándar solamente lo siguiente:
 
     <línea_con_nombre_y_versión_del_compilador>
     <línea_con_copyright_para_el_compilador>
 
-En caso de que ocurran errores durante la operación del compilador, **coolc.sh** deberá terminar con código
+En caso de que ocurran errores durante la operación del compilador, **coolc.bat** deberá terminar con código
 de salida (exit code) 1 y reportar a la salida estándar (standard output stream) lo que sigue...
 
     <línea_con_nombre_y_versión_del_compilador>

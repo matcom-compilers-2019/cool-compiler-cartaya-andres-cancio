@@ -177,12 +177,18 @@ namespace Cool_Compiler.Visitor
             listdata.Add(new CIL_DataElement("error_div0", "Divition By Zero Exception"));
             listdata.Add(new CIL_DataElement("error_indexout", "Index Out Range Exception"));
             
-            //inst.methods.Add(SystemCallGenerator.GeneratePrint());
+            inst.methods.Add(SystemCallGenerator.GeneratePrint());
             inst.methods.Add(SystemCallGenerator.GeneratePrintInt());
             inst.methods.Add(SystemCallGenerator.Descend());
             inst.methods.Add(SystemCallGenerator.Abort());
-            inst.methods.Add(SystemCallGenerator.Entry());
+            inst.methods.Add(SystemCallGenerator.TypeName());
+            inst.methods.Add(SystemCallGenerator.StrLenght());
+            inst.methods.Add(SystemCallGenerator.StrConcat());
+            inst.methods.Add(SystemCallGenerator.Copy());
+            inst.methods.Add(SystemCallGenerator.StrSubstr());
+            inst.methods.Add(SystemCallGenerator.GenerateReadInt());
 
+            inst.methods.Add(SystemCallGenerator.Entry());
             return new CIL_AST_Root(new CIL_SectionData(listdata), new CIL_SectionTypes(inst.listtypes), new CIL_SectionFunction(inst.methods));
         }
 
@@ -416,7 +422,6 @@ namespace Cool_Compiler.Visitor
 
         public string Visit(AST_ListProp node)
         {
-            // TODO : IMPLEMENT HERE
             foreach (var item in node.Children)
                 item?.Visit(this);
             return "";
@@ -531,7 +536,7 @@ namespace Cool_Compiler.Visitor
             {
                 typ = methodcontext.GenLocal("get_typ", true);
                 methodcontext.Staments.Add(new CIL_TypeOf(e0, typ));
-                methodcontext.Staments.Add(new CIL_FunctionCall(node.id.Id, new CIL_Params(parm), typ, s, true, (node.MyType == null) ? "NULL" : node.MyType.Name ));
+                methodcontext.Staments.Add(new CIL_FunctionCall(node.id.Id, new CIL_Params(parm), typ, s, true, (node.expr.MyType == null) ? "NULL" : node.expr.MyType.Name ));
             }
 
             return s;
@@ -551,7 +556,6 @@ namespace Cool_Compiler.Visitor
         public string Visit(AST_New_Type node)
         {
             var s = methodcontext.GenLocal("exp", true);
-            // TODO : Test this
             if (node.type.Type == "SELF_TYPE")
             {
                 var s2 = methodcontext.GenLocal("get_type", true);
@@ -567,7 +571,6 @@ namespace Cool_Compiler.Visitor
 
         public string Visit(AST_FormalDec node)
         {
-            // TODO : IMPLEMENT HERE
             foreach (var item in node.Children)
                 item?.Visit(this);
             return "";
@@ -575,7 +578,6 @@ namespace Cool_Compiler.Visitor
 
         public string Visit(AST_Type_Node node)
         {
-            // TODO : IMPLEMENT HERE
             foreach (var item in node.Children)
                 item?.Visit(this);
             return "";
@@ -583,7 +585,6 @@ namespace Cool_Compiler.Visitor
 
         public string Visit(AST_Token node)
         {
-            // TODO : IMPLEMENT HERE
             return "";
         }
 
@@ -603,11 +604,65 @@ namespace Cool_Compiler.Visitor
             var s = node.expr.Visit(this);
             var solve = methodcontext.GenLocal("exp", true);
             var typexpr = methodcontext.GenLocal("get_type", true);
-
+            var besti = methodcontext.GenLocal("best_type", true);
+            
+            var cmp = methodcontext.GenLocal("comp", true);
             methodcontext.Staments.Add(new CIL_TypeOf(s, typexpr));
 
+            var endlab = methodcontext.GenLabel("end");
+
             methodcontext.Staments.Add(new CIL_ExceptionCond(typexpr, "0", "error_null"));
-            
+
+            methodcontext.Staments.Add(new CIL_Asig(besti, "10000", "Int"));
+
+            List<string> typeval = new List<string>();
+            foreach (var item in node.props.Propertys)
+            {
+                typeval.Add(methodcontext.GenLocal("type", true));
+            }
+
+            for (int i = 0; i < typeval.Count; i++)
+            {
+                methodcontext.Staments.Add(new CIL_TypeOf(node.props.Propertys[i].decl.type.Type, typeval[i]));
+                methodcontext.Staments.Add(new CIL_FunctionCall("descend", new CIL_Params(new List<string> { typeval[i], typexpr }), null, typeval[i], false, null));
+                methodcontext.Staments.Add(new CIL_ExpBin(besti, typeval[i], "<", cmp));
+                var iff = methodcontext.GenLabel("if");
+                methodcontext.Staments.Add(new CIL_If_Goto(cmp, iff));
+                methodcontext.Staments.Add(new CIL_Asig(besti, typeval[i], "var"));
+                methodcontext.Staments.Add(new CIL_Label(iff));
+            }
+
+            List<string> labelsok = new List<string>();
+            for (int i = 0; i < typeval.Count; i++)
+                labelsok.Add(methodcontext.GenLabel("ok"));
+
+            methodcontext.Staments.Add(new CIL_ExceptionCond(besti, "10000", "error_null"));
+
+            for (int i = 0; i < typeval.Count; i++)
+            {
+                methodcontext.Staments.Add(new CIL_ExpBin(besti, typeval[i], "=", cmp));
+                methodcontext.Staments.Add(new CIL_If_Goto(cmp, labelsok[i]));
+            }
+
+            for (int i = 0; i < typeval.Count; i++)
+            {
+                methodcontext.Staments.Add(new CIL_Label(labelsok[i]));
+
+                methodcontext.AddContext("case");
+
+                
+                string id = methodcontext.GenLocal(node.props.Propertys[i].decl.id.Id, false);
+                methodcontext.Staments.Add(new CIL_Asig(id, s, "var"));
+                string idexp = node.props.Propertys[i].exp.Visit(this);
+                methodcontext.Staments.Add(new CIL_Asig(solve, idexp, "var"));
+
+                methodcontext.ClearContext();
+                
+
+                methodcontext.Staments.Add(new CIL_Goto(endlab));
+            }
+
+            methodcontext.Staments.Add(new CIL_Label(endlab));
 
 
             return solve;

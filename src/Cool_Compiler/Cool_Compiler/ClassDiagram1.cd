@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Cool_Compiler.AST.AST_Node" Collapsed="true">
+    <Position X="25.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAEAQACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Expresion" Collapsed="true">
+    <Position X="19.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Root" Collapsed="true">
+    <Position X="38.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ListClass" Collapsed="true">
+    <Position X="43.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ClassDef" Collapsed="true">
+    <Position X="45.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAwAAAAAgAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ClassProperty" Collapsed="true">
+    <Position X="47.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAgA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ListProp" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ListMethod" Collapsed="true">
+    <Position X="36.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_MethodDef" Collapsed="true">
+    <Position X="41" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQAAAAAAAAAACABAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_BinaryOp" Collapsed="true">
+    <Position X="20.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAACACAAAAACAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_UnaryOp" Collapsed="true">
+    <Position X="25.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_StamentList" Collapsed="true">
+    <Position X="32" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Cte" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_StringCte" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Asignacion" Collapsed="true">
+    <Position X="14" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Token" Collapsed="true">
+    <Position X="52.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAACAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Id" Collapsed="true">
+    <Position X="27.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Type_Node" Collapsed="true">
+    <Position X="50" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_FormalDec" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_If" Collapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAQEAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_While" Collapsed="true">
+    <Position X="16.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_New_Type" Collapsed="true">
+    <Position X="23" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Isvoid" Collapsed="true">
+    <Position X="29.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_ExpCall" Collapsed="true">
+    <Position X="34.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAkAAAAAAAAAAAAAgAAgA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Call" Collapsed="true">
+    <Position X="34.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_Let" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAACAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cool_Compiler.AST.AST_CaseOf" Collapsed="true">
+    <Position X="18.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAACAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>AST\AST_Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -30,7 +30,7 @@ namespace Cool_Compiler.AST.CIL
                 else if (stat_split[0] == "GOTO")
                     return new CIL_Goto(stat_split[1]);
                 else if (stat_split[0] == "RETURN")
-                    return new CIL_Return(stat_split[1], null); // TODO : Ver lo del null este
+                    return new CIL_Return(stat_split[1], null);
                 else if (stat_split[0] == "PRINT")
                     return new CIL_IOPrint(stat_split[1]);
                 else if (stat_split[0] == "PRINT_INT")
@@ -54,7 +54,7 @@ namespace Cool_Compiler.AST.CIL
                 else if (stat_split[0] == "SETATTR")
                     return new CIL_SetAttr(stat_split[1], stat_split[2], stat_split[3], stat_split[4]);
                 else if (stat_split[1] == "=" && stat_split[2] == "ALLOCATE")
-                    return new CIL_Allocate(stat_split[0], stat_split[3], true); // TODO : ver lo de boolsito este
+                    return new CIL_Allocate(stat_split[0], stat_split[3], true); 
                 else if (stat_split[1] == "=" && stat_split[2] == "TYPEOF")
                     return new CIL_TypeOf(stat_split[0], stat_split[3]);
                 else if (stat_split[1] == "=" && stat_split[2] == "LOAD")

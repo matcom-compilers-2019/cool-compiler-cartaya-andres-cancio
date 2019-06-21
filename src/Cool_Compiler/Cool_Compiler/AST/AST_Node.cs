@@ -117,6 +117,11 @@ namespace Cool_Compiler.AST
             this.Propertys = new List<AST_ClassProperty>(children);
         }
 
+        public AST_ListProp(int r, int c, IEnumerable<AST_ClassProperty> children) : base(r, c, children)
+        {
+            this.Propertys = new List<AST_ClassProperty>(children);
+        }
+
         public override T Visit<T>(IASTVisitor<T> visitor) => visitor.Visit(this);
     }
 
@@ -402,6 +407,10 @@ namespace Cool_Compiler.AST
         public AST_ListProp props;
         public AST_Expresion expr;
         public AST_Let(ParserRuleContext parser_node, AST_ListProp props, AST_Expresion expr) : base(parser_node, new AST_Node[] { props, expr })
+        {
+            this.props = props; this.expr = expr;
+        }
+        public AST_Let(int r, int c, AST_ListProp props, AST_Expresion expr) : base(r, c, new AST_Node[] { props, expr })
         {
             this.props = props; this.expr = expr;
         }

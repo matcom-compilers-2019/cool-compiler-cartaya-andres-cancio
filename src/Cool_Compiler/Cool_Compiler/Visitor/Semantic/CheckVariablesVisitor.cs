@@ -50,6 +50,10 @@ namespace Cool_Compiler.Visitor.Semantic
 
         public bool Visit(AST_Id node)
         {
+            if(!CurrContext.IsDefine(node.Id) && node.Id != "self")
+            {
+                CurrErrorLoger.LogError(node.row, node.col, $"{node.Id} no esta definido");
+            }
             return CurrContext.IsDefine(node.Id) || node.Id == "self";
         }
 
@@ -220,6 +224,16 @@ namespace Cool_Compiler.Visitor.Semantic
 
         public bool Visit(AST_ExpCall node)
         {
+            if (!node.expr.Visit(this))
+                return false;
+            if (node.explicittype != null)
+            {
+                if (!All_Types.ContainsKey(node.explicittype.Type))
+                {
+                    CurrErrorLoger.LogError(node.explicittype.row, node.explicittype.col, $"El tipo {node.explicittype.Type} no existe");
+                    return false;
+                }
+            }
             return node.arg.Visit(this);
         }
 
@@ -261,13 +275,16 @@ namespace Cool_Compiler.Visitor.Semantic
 
         public bool Visit(AST_CaseOf node)
         {
-            if (!node.expr.Visit(this))
+            if (!(node.expr is AST_Id) && !node.expr.Visit(this))
                 return false;
 
             foreach (var item in node.props.Propertys)
             {
+                CurrContext = CurrContext.CreateChild();
+                CurrContext.Define(item.decl.id.Id);
                 if (!item.exp.Visit(this))
                     return false;
+                CurrContext = CurrContext.GetParent();
             }
 
             return true;

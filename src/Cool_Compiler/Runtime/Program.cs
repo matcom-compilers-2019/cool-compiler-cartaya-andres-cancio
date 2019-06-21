@@ -271,7 +271,7 @@ namespace Runtime
             Console.WriteLine(solve);
         }
 
-        public static ErrorLoger SemanticChecking(Cool_Compiler.AST.AST_Root root)
+        public static Tuple<bool , ErrorLoger> SemanticChecking(Cool_Compiler.AST.AST_Root root)
         {
             var v0 = new CheckIDSandTypeDecVisitor();
 
@@ -283,29 +283,29 @@ namespace Runtime
                     var v2 = new CheckVariablesVisitor();
                     if (v2.Visit(root))
                     {
-                        var v3 = new CheckVariablesVisitor();
+                        var v3 = new CheckTypesVisitor();
                         if (v3.Visit(root))
                         {
-                            return null;
+                            return new Tuple<bool, ErrorLoger>(true, null);
                         }
                         else
                         {
-                            return v3.CurrErrorLoger;
+                            return new Tuple<bool, ErrorLoger>(false, v3.CurrErrorLoger);
                         }
                     }
                     else
                     {
-                        return v2.CurrErrorLoger;
+                        return new Tuple<bool, ErrorLoger>(false, v2.CurrErrorLoger);
                     }
                 }
                 else
                 {
-                    return v1.CurrErrorLoger;
+                    return new Tuple<bool, ErrorLoger>(false, v1.CurrErrorLoger);
                 }
             }
             else
             {
-                return v0.CurrErrorLoger;
+                return new Tuple<bool, ErrorLoger>(false, v0.CurrErrorLoger);
             }
         }
 
@@ -355,13 +355,19 @@ namespace Runtime
 
             var root = BuildAST_Cool.BUILD(text);
 
-            var errors = SemanticChecking(root);
+            if(root == null)
+            {
+                return;
+            }
 
-            if (errors == null || errors.Log.Count == 0)
+            var result = SemanticChecking(root);
+
+            if (result.Item1)
             {
                 var cil_root = CILCompiler.Build(root);
                 string s = cil_root.ToString();
                 var w = new StreamWriter(dest);
+                //Console.WriteLine(s);
                 w.Write(s);
                 w.Close();
                 var sem = SemanticType.BuildAllType(root.class_list);
@@ -370,12 +376,14 @@ namespace Runtime
                 s = (prog.Visit(cil_root));
                 //Console.WriteLine(s);
                 var t = new StreamWriter(mips);
+                //Console.WriteLine(s);
                 t.Write(s);
                 t.Close();
             }
             else
             {
-                foreach (var item in errors.Log)
+                Console.WriteLine("There are some errors!!!");
+                foreach (var item in result.Item2.Log)
                 {
                     Console.WriteLine(item);
                 }
@@ -384,8 +392,13 @@ namespace Runtime
 
         static void Main(string[] args)
         {
-            string path = "main.cl", dest = "cil.il", mips = "mips.s";
-            Compilator(path, dest, mips);
+            //OldMain();string t = Console.ReadLine();
+            string path = "main.cl";
+            if (args.Length > 0) path = args[0];
+            string tmp = path;
+            tmp = tmp.Remove(tmp.Length - 3);
+            //Console.WriteLine(path + " " + tmp + ".il" + " " + tmp + ".s");
+            Compilator(path, tmp + ".il", tmp + ".s");
         }
 
         static bool debug_new_shit(string text)

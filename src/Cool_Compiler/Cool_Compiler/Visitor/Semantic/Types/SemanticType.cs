@@ -12,7 +12,6 @@ namespace Cool_Compiler.Visitor.Semantic
     {
         public string Name { get; set; }
 
-        // TODO : Poner el level private
         public int Level { get; set; }
 
         public SemanticType Father { get; set; }

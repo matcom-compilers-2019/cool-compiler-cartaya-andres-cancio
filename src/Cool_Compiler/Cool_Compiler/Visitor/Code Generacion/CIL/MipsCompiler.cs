@@ -220,7 +220,9 @@ namespace Cool_Compiler.Visitor.CIL
             }
             else
             {
-                throw new Exception("Famili la cosa esta mala");
+                solve += $"\t lw $t0 {context_function[node.Id]}\n";
+                solve += $"\t lw $t1 4($t0)\n";
+                solve += $"\t sw $t1 {context_function[node.Result]}\n";
             }
             return solve;
         }
@@ -247,8 +249,12 @@ namespace Cool_Compiler.Visitor.CIL
 
         public string Visit(CIL_FunctionCall node)
         {
-            if (!node.Is_Type_Dir)
+            if (true)
             {
+                //if(node.Is_Type_Dir && ! Semtype.ContainsKey(node.Static_Type))
+                //{
+                //    throw new Exception("Algo se esta partiendo aqui con el vcall");
+                //}
                 string solve = "";
                 int Reserv = 4 * (node.Params.Params.Count + 2);
                 // reserv memory to pass the params
@@ -283,16 +289,23 @@ namespace Cool_Compiler.Visitor.CIL
                 // set fp;
                 solve += $"\t move $fp, $sp\n";
 
-                var addr = offset_method[node.Static_Type][node.Name];
+                if (node.Static_Type != null)
+                {
+                    var addr = offset_method[node.Static_Type][node.Name];
 
-                // find addr type
-                solve += $"\t la $t0, {node.Static_Type}\n";
+                    // find addr type
+                    solve += $"\t la $t0, {node.Static_Type}\n";
 
-                // t1 = addr method
-                solve += $"\t lw $t1, {addr + 16}($t0)\n";
+                    // t1 = addr method
+                    solve += $"\t lw $t1, {addr + 16}($t0)\n";
 
-                solve += $"\t jal $t1\n";
+                    solve += $"\t jal $t1\n";
 
+                }
+                else
+                {
+                    solve += $"\t jal {node.Name}\n";
+                }
                 
                 
                 solve += $"\t lw $ra, {Reserv - 4}($sp)\n";
@@ -306,7 +319,7 @@ namespace Cool_Compiler.Visitor.CIL
 
                 return solve;
             }
-            else throw new Exception("Chama no se esta haciendo el polimorfismo");
+            //else throw new Exception("Chama no se esta haciendo el polimorfismo");
         }
 
         public string Visit(CIL_FunctionDef node)
@@ -394,15 +407,19 @@ namespace Cool_Compiler.Visitor.CIL
                 solve += $"\t syscall\n";
                 solve += $"\t sw $v0 {context_function[node.Result]}\n";
 
-                // TODO Set el tipo y el len;
+                solve += $"\t sw $a0, 0($v0)\n"; // set len
+                solve += $"\t sw $t0, 4($v0)\n"; // set type
             }
             else
             {
                 solve += $"\t sw $t0, {context_function[node.Type]}\n";
-                solve += $"\t lw $a0, 4($t0)\n";
+                solve += $"\t lw $a0, 0($t0)\n";
                 solve += $"\t li $v0, 9\n";
                 solve += $"\t syscall\n";
                 solve += $"\t sw $v0 {context_function[node.Result]}\n";
+
+                solve += $"\t sw $a0, 0($v0)\n"; // set len
+                solve += $"\t sw $t0, 4($v0)\n"; // set type
             }
             return solve;
         }
@@ -458,13 +475,85 @@ namespace Cool_Compiler.Visitor.CIL
 
         public string Visit(CIL_StrStr node)
         {
-            
-            throw new NotImplementedException();
+
+            var code_result = "";
+            var stringref = context_function[node.StrId];
+            var destiny = context_function[node.Result];
+
+            code_result += $"\t lw $t0 {stringref}\n";
+            code_result += $"\t lw $t0 0($t0)\n";
+            code_result += $"\t addi $t0 $t0 -8\n";
+            //I
+            code_result += $"\t lw $t1 {context_function[node.I]}\n";
+            //L
+            code_result += $"\t lw $t2 {context_function[node.L]}\n";
+
+            //L+I inside?
+
+            code_result += $"\t lw $t3 {stringref}\n";
+            code_result += $"\t move $a0 $t1\n";
+            code_result += $"\t add $a0 $a0 $t2\n";
+            code_result += $"\t sle $t4, $a0, $t0\n";
+            code_result += $"\t la $a0 error_indexout\n";
+            code_result += $"\t beq $t4, $zero, exception\n";
+
+            code_result += $"\t lw $t0 {stringref}\n";
+            code_result += $"\t lw $t0 0($t0)\n";
+            code_result += $"\t lw $t3 {stringref}\n";
+            code_result += $"\t li $a0 0\n";
+            code_result += $"\t addi $a0 $t2 0\n";
+            //branch para la excepttion
+
+            //copy the substring
+            //allocate first
+            code_result += $"\t addi $a0 $a0 8\n";
+            code_result += $"\t li $v0 9\n";
+            code_result += $"\t syscall\n"; // allocate
+            code_result += $"\t sw $v0 {context_function[node.Result]}\n";
+
+            code_result += $"\t la $t2 String\n";
+
+            code_result += $"\t sw $a0 0($v0)\n"; // save len
+
+            code_result += $"\t sw $t2 4($v0)\n"; // save type
+
+            code_result += $"\t lw $t0 {stringref}\n";
+
+            code_result += $"\t lw $t1 {context_function[node.I]}\n";
+
+
+            code_result += $"\t addi $t0, $t0, 8\n";//saltate el tipo y tamano
+            code_result += $"\t addi $v0, $v0, 8\n";//saltate el tipo y tamano
+
+            //I
+            code_result += $"\t lw $t1 {context_function[node.I]}\n";
+            //L
+            code_result += $"\t lw $t2 {context_function[node.L]}\n";
+
+            code_result += $"\t add $t0, $t0, $t1\n";//parate en I
+
+            code_result += $"\t .sub: \n";
+            code_result += $"\t beq $t2 $zero .endsub\n";
+            code_result += $"\t lb $t3 0($t0)\n";
+            code_result += $"\t sb $t3 0($v0)\n";
+            code_result += $"\t addi $t2, $t2, -1\n";
+            code_result += $"\t addi $t0, 1\n";
+            code_result += $"\t addi $v0, 1\n";
+            code_result += $"\t j .sub\n";
+            code_result += $"\t .endsub: \n";
+
+
+            return code_result;
         }
 
         public string Visit(CIL_LengthStr node)
         {
-            throw new NotImplementedException();
+            var solve = "";
+            solve += $"\t lw $v0, {context_function[node.StrId]}\n";
+            solve += $"\t lw $v1, 0($v0)\n";
+            solve += $"\t addi $v1, $v1, -8\n";
+            solve += $"\t sw $v1, {context_function[node.Result]}\n";
+            return solve;
         }
 
         public string Visit(CIL_IORead node)
@@ -490,7 +579,7 @@ namespace Cool_Compiler.Visitor.CIL
         {
             string solve = "";
 
-            solve += $"\n la $a0, {node.Sms}\n";
+            solve += $"\n\t la $a0, {node.Sms}\n";
             int val;
             if (!int.TryParse(node.Cond, out val))
                 solve += $"\t lw $t0, {context_function[node.Cond] } \n";
@@ -526,12 +615,26 @@ namespace Cool_Compiler.Visitor.CIL
 
         public string Visit(CIL_IOReadInt node)
         {
-            throw new NotImplementedException();
+            var s = "";
+            s += $"\t li $v0, 5\n";
+            s += $"\t syscall\n";
+            s += $"\t sw $v0 {context_function[node.Result]}\n";
+            return s;
         }
 
         public string Visit(CIL_TypeName node)
         {
-            throw new NotImplementedException();
+            string solve = "";
+            
+            solve += $"\t lw $t0, {context_function[node.Type]}\n";
+            
+            solve += $"\t lw $a0, 12($t0)\n";
+
+            solve += $"\t li $v0, 4\n";
+
+            solve += $"\t syscall\n";
+
+            return solve;
         }
 
         public string Visit(CIL_FatherType node)
@@ -545,7 +648,71 @@ namespace Cool_Compiler.Visitor.CIL
 
         public string Visit(CIL_StrConcat node)
         {
-            throw new NotImplementedException();
+           var code_result = "";
+
+            var string1_len = context_function[node.StrId];
+            var string2_len = context_function[node.StrId2];
+            //allocate the space in node.result
+            code_result += $"\t lw $t0 {string1_len}\n";
+            code_result += $"\t lw $t0 0($t0)\n";
+            
+            code_result += $"\t li $a0 0\n";
+            code_result += $"\t lw $t1 {string2_len}\n";
+            code_result += $"\t lw $t1 0($t1)\n";
+            code_result += $"\t add $a0 $t0 $t1\n";
+            code_result += $"\t addi $a0 $a0 -8\n";
+            code_result += $"\t li $v0 9\n";
+            code_result += $"\t syscall\n"; // allocate
+            code_result += $"\t sw $v0 {context_function[node.Result]}\n";
+            //guarda la direccion de la memoria allocada
+
+            code_result += $"\t la $t2 String\n";
+
+            code_result += $"\t sw $a0 0($v0)\n"; // save len
+
+            code_result += $"\t sw $t2 4($v0)\n"; // save type
+
+            code_result += $"\t lw $t0 {string1_len}\n";
+            code_result += $"\t lw $t1 {string2_len}\n";
+
+            code_result += $"\t lw $t2 0($t0)\n";
+            code_result += $"\t addi $t2 $t2 -8\n";            
+
+            code_result += $"\t lw $t4 0($t1)\n";
+            code_result += $"\t addi $t4 $t4 -8\n";
+            
+
+
+            code_result += $"\t addi $t0 $t0 8\n";
+            code_result += $"\t addi $t1 $t1 8\n";
+            code_result += $"\t addi $v0 $v0 8\n";
+
+
+            // en V0 = newstr, T0 = str1, T1 = str2, t2 = len(str1);
+
+            code_result += $"\t .concat1: \n";
+            code_result += $"\t beq $t2 $zero .endconcat1\n";
+            code_result += $"\t lb $t3 0($t0)\n";
+            code_result += $"\t sb $t3 0($v0)\n";
+            code_result += $"\t addi $t2, $t2, -1\n";
+            code_result += $"\t addi $t0, 1\n";
+            code_result += $"\t addi $v0, 1\n";
+            code_result += $"\t j .concat1\n";
+            code_result += $"\t .endconcat1: \n";
+
+            code_result += $"\t move $t2 $t4\n";
+
+            code_result += $"\t .concat2: \n";
+            code_result += $"\t beq $t2 $zero .endconcat2\n";
+            code_result += $"\t lb $t3 0($t1)\n";
+            code_result += $"\t sb $t3 0($v0)\n";
+            code_result += $"\t addi $t2, $t2, -1\n";
+            code_result += $"\t addi $t1, 1\n";
+            code_result += $"\t addi $v0, 1\n";
+            code_result += $"\t j .concat2\n";
+            code_result += $"\t .endconcat2: \n";
+
+            return code_result;
         }
 
         public string Visit(CIL_Abort node)
@@ -555,7 +722,20 @@ namespace Cool_Compiler.Visitor.CIL
 
         public string Visit(CIL_Copy node)
         {
-            throw new NotImplementedException();
+            var solve = "";
+            solve += $"\t lw $t0 {context_function["self"]}\n";
+            solve += $"\t lw $t2 0($t0)\n";
+            solve += $"\t lw $t1 {context_function[node.Result]}\n";
+            solve += $"\t .cop: \n";
+            solve += $"\t beq $t2 $zero .endcop\n";
+            solve += $"\t lb $t3 0($t0)\n";
+            solve += $"\t sb $t3 0($t1)\n";
+            solve += $"\t addi $t2, $t2, -1\n";
+            solve += $"\t addi $t0, 1\n";
+            solve += $"\t addi $t1, 1\n";
+            solve += $"\t j .cop\n";
+            solve += $"\t .endcop: \n";
+            return solve;
         }
     }
 }

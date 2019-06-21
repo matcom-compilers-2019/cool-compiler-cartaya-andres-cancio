@@ -12,7 +12,6 @@ namespace Cool_Compiler.Visitor.Semantic
 {
     public class CheckTypesVisitor : IASTVisitor<bool>
     {
-        // TODO : Romper el AST del demonio que solo tenga fila y columna, sin Itree
         public IContext CurrContext;
         public ErrorLoger CurrErrorLoger;
         public Dictionary<string, SemanticType> All_Types;

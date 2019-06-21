@@ -728,8 +728,7 @@ namespace Cool_Compiler.AST.CIL
     }
 
 
-
-    // TODO : Agregar CONCAT y SUBSTRING
+    
 
 
     #endregion

@@ -20,16 +20,41 @@ namespace Cool_Compiler.Transpiler
             CoolLexer lexer = new CoolLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CoolParser parser = new CoolParser(tokens);
+
+            AntlrInputStream input2 = new AntlrInputStream(text);
+            CoolLexer lexer2 = new CoolLexer(input2);
+            CommonTokenStream tokens2 = new CommonTokenStream(lexer2);
+            CoolParser parser2 = new CoolParser(tokens2);
+            BuildAST_Cool_Errors v2 = new BuildAST_Cool_Errors();
+            v2.Visit(parser2.program());
+            if (!v2.Ok) return null;
+            
             BuildAST_Cool_Visitor v = new BuildAST_Cool_Visitor();
-            return (AST_Root)v.Visit(parser.program());
+
+            var s = (AST_Root)v.Visit(parser.program());
+            return s;
         }
     }
+
+    public class BuildAST_Cool_Errors : CoolBaseVisitor<bool>
+    {
+        public bool Ok = true;
+
+
+        public override bool VisitErrorNode(IErrorNode node)
+        {
+            Ok = false;
+            return false;
+        }
+    }
+
     public class BuildAST_Cool_Visitor : CoolBaseVisitor<AST_Node>
     {
         public override AST_Node VisitBool([NotNull] CoolParser.BoolContext context)
         {
             return new AST_Cte(context, new AST_Token(context.GetText(), (context.cte.Type == CoolLexer.TRUE)?"true":"false"));
         }
+        
 
         public override AST_Node VisitGetid([NotNull] CoolParser.GetidContext context)
         {
